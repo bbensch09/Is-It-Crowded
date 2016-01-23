@@ -1,5 +1,5 @@
 get '/' do
-  redirect 'http://www.modernloves.com'
+  erb :index
 end
 
 get '/app' do
