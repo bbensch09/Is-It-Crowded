@@ -3,7 +3,7 @@
 <% if current_user %>
 
     <h3><a id="show-new-post" href="#"> Report wait time on a new location</a></h3>
-    <div id="new-post" class="hide">
+    <div id="new-post" class="">
       <h1> Create new location </h1>
       
       <form id="submit-new-post" method="POST" action="/new">
@@ -33,7 +33,7 @@
       <div class='city'>City: <%= location.city %>, <%= location.state %> </div>
     </div>
     <div class="post-container col-md-7 fl-l">
-        <a class="title" href='/<%= location.id %>'><%= location.name %></a>
+        <a class="title" href='posts/<%= location.posts.last.id %>'><%= location.name %></a>
     </div>
     <div class="reviews-count col-md-4 fl-l">
       <span> <%= location.posts.last.kudos.count %> kudos.</span>
