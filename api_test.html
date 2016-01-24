@@ -23,8 +23,16 @@
       //results that match a location that the user inputted
       function getLocations(data) {
         //$("#results").html(data[0].dba_name);
-        //$("#results").html(data);
-        console.log(data);
+        //console.log(data[0].dba_name);
+        //console.log(data);
+        var str = "";
+        str = str + "<ul>";
+        for (var i = 0; i < data.length; i++) {
+           str = str + "<li>" + data[i].dba_name + "</li>";
+           //console.log(str);
+        }
+        str = str + "</ul>";
+        $("#results").html(str);
       }
 
       //when a user enters a location and hits the submit button
