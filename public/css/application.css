@@ -20,9 +20,24 @@ a.btn {
   width: 60%;
   display: inline-block;
 }*/
+.navbar .navbar-brand img {
+  height: 30px;
+  margin-top: -5px;
+}
+
+button.kudos {
+  background: none;
+  border: none;
+}
+
+img.kudos {
+  width: 50px;
+  background: none;
+  border: none;
+}
 
 nav ul {
-  display: inline-block;
+  display: inline-block; 
   width: 30%;
   text-align: right;
 }

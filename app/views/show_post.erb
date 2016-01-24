@@ -6,8 +6,74 @@
       <%= @post.location.city %><br/>
       <%= @post.location.phone %>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 text-center">
+      <h1>Is it Crowded at <%= @post.location.name %>?</h1>
       
-    </div>
+      <h6>
+        Last updated by: <%=@post.post_creator.email %> at <%=@post.created_at %> 
+      </h6>
+
+      <% if @post.status == "Active" %> 
+
+      <% if @post.crowded %>
+      <h2 class="crowded">
+        (un)Surprisingly, <%= @post.location.name %> is crowded right now.
+      </h2>
+      <% else %>
+      <h2 class="not-crowded"> 
+        You're in luck! It's not crowded (yet).
+      </h2>
+      <% end %>
+      <h3>
+        The current wait time is approximately <%= @post.wait_time%> minutes.
+      </h3>
+      <div class="wait-time col-md-12 text-center">
+        <form id="submit-new-post" method="POST" action="/kudos/new"> 
+          <input type="hidden" name="id" value="<%= @post.id %>">     
+          <button class="kudos" type="submit" value="Thanks"><img class="kudos" src="/imgs/kudos.svg" alt=""></button>
+        </form>
+        <h4>
+          This post has been thanked by <%=@post.kudos.count %> members.
+        </h4>
+      </div>
+      <% else %>
+      <h2>We don't have a recent status report about the wait.</h2>
+      <h1>Be the first to report the current wait!</h1>
+      <form id="submit-new-post" method="POST" action="/posts/new">
+        <div class="form-group">
+          <input type="hidden" name="id" value="<%= @post.id %>">     
+           <h3> Is it crowded?</h3>
+           <input type="radio" name="crowded" value="true"> Yes, there's a wait.
+           <br>
+           <input type="radio" name="crowded" value="false"> No wait at all!
+           <h5>
+            Approximately how long is the wait?
+            <select name="wait_time">
+              <option value="15"> 15 minutes </option>
+              <option value="30"> 30 minutes </option>
+              <option value="45"> 45 minutes </option>
+              <option value="60"> 60 minutes </option>
+              <option value="75"> 75 minutes </option>
+              <option value="90"> 90 minutes </option>
+            </select>
+        </h5>
+        <input type="submit" value="Report the Crowd">
+      </div>
+    </form>
+    <% end %>
   </div>
+
+  <div class="col-md-12 text-center">
+
+    <h4>Location Details</h4>
+    <p>
+      <%= @post.location.address %> <br>
+      <%= @post.location.city %> <br>
+      <h5> Call ahead to make a reservation! <br> <%= @post.location.phone %> </h5>
+    </p>
+  </div>
+  <div class="col-md-12">
+
+  </div>
+</div>
 </div>
