@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
 
   validates :email, presence: true, uniqueness: true
   has_many :auths
+  has_many :points
 
   def password
     @password ||= BCrypt::Password.new(password_hash)
