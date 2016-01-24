@@ -1,5 +1,6 @@
 get '/' do
-  erb :index
+	@locations = Location.all	
+  	erb :index
 end
 
 # SHOW A SPECIFIC RESTAURANT

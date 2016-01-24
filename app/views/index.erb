@@ -1,9 +1,62 @@
-<div class="container">
-  <br>
-  <center><h1>Sinatra skeleton + many different authentication things</h1></center>
-  <p>Notes:</p>
-  <ul>
-    <li>User has ability to log in via google, github, and local accounts</li>
-    <li>User can link both google and github accounts to same website account</li>
-  </ul>
+<h1 class="text-center"  id="back-to-top"> Is it crowded? </h1>
+
+<% if current_user %>
+
+    <h3><a id="show-new-post" href="#"> Report wait time on a new location</a></h3>
+    <div id="new-post" class="hide">
+      <h1> Create new location </h1>
+      
+      <form id="submit-new-post" method="POST" action="/new">
+        Name: <input type="text" name="name" placeholder="Flour & Water">
+        <br>
+        Address:<input type="text" name="address" placeholder="Address">
+        <br>
+        City: <input type="text" name="city" placeholder="San Francisco">
+        State: <input type="text" name="state" placeholder="CA">
+        Zip: <input type="text" name="zip" placeholder="94107">
+        <br>
+        <input type="submit" value="Create location">
+      </form>
+    
+    </div>
+
+<% end %>
+
+<div class="col-md-12">
+
+  <!-- % @restaurants.sort{|x,y| x.time_since_creation <=> y.time_since_creation}.each do |post| %> -->
+
+  <% @locations.each do |location| %>
+  <div class="post col-md-11" id="<%= location.id %>">    
+    <div class="left-box col-md-3 fl-l">
+      <div class="cuisine"> Type: <%= location.location_type %>.</div>
+      <div class='city'>City: <%= location.city %>, <%= location.state %> </div>
+    </div>
+    <div class="post-container col-md-7 fl-l">
+        <a class="title" href='/<%= location.id %>'><%= location.name %></a>
+    </div>
+    <div class="reviews-count col-md-4 fl-l">
+      <span> <%= location.posts.last.kudos.count %> kudos.</span>
+      <span> Created <%= location.posts.last.time_since_creation %> minutes ago </span>
+    </div>
+    <div class="cl-b"> </div>
+    <% if current_user %>
+        <% if location.location_creator_id == current_user.id %>
+          <a href="/<%= location.id %>/edit" > Edit </a>
+          <form action="/<%= location.id %>/delete" method="POST">
+            <input name="_method" type="hidden" value="delete" />
+            <input type="submit" value="Delete">
+          </form>
+        <% end %>
+    <% end %>
+  </div>
+  <% end %>
+  <div id="new-post-container">
+  </div>
+</div>
+
+<div>
+  <h3>
+  <a class="back-to-top" href="#back-to-top"> Back to Top </a>
+  </h3>
 </div>
