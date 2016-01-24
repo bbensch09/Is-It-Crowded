@@ -32,17 +32,21 @@ def create_post
 	Post.create!(unique_post)
 end
 
+
+def location_types
+	['bar','restaurant','club']
+end
+
 def unique_location
 	{
     location_creator_id: (rand(2) + 1),
     name: Faker::Company.name,
-    cuisine: Faker::Company.buzzword,    
     address: Faker::Address.street_address,
     city: Faker::Address.city,
     state: Faker::Address.state_abbr,
     zip: Faker::Address.zip,
     phone: Faker::PhoneNumber.cell_phone,
-    type: rand("Bar","Restaurant"),
+    location_type: location_types.shuffle.sample,
     lat: Faker::Address.latitude,
     lng: Faker::Address.longitude
   }
@@ -62,7 +66,7 @@ end
 
 5.times do
 	new_location = Location.create!(unique_location)
-	(rand(3)+1).times {new_location.posts << create_post}
+	new_location.posts << create_post
 	new_location.posts.each do |post|
 		(rand(3)+1).times {post.kudos << create_kudo}
 	end
