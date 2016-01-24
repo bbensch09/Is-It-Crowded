@@ -1,3 +1,7 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+
 <h1 class="text-center"  id="back-to-top"> Is it crowded? </h1>
 
 <% if current_user %>
@@ -26,8 +30,24 @@
 
   <!-- % @restaurants.sort{|x,y| x.time_since_creation <=> y.time_since_creation}.each do |post| %> -->
 
+  <div class="col-md-12 text-center">
+      <h1>Places In San Francisco</h1>
+      <h3>Enter a Location</h3>
+      
+      <form method="get">
+        <div class="form-group">
+          <input type="text" class="form" id="a_location">
+          <input type="button" class="btn btn-default" id="submit_location" value="Search for a Restaurant or Point of Interest">
+        </div>
+      </form>
+      <p>Matching Locations</p>
+      <div id="results"></div>
+      <div id="confirmedLocation"></div>
+
+    </div>
+
   <% @locations.each do |location| %>
-  <div class="post col-md-11" id="<%= location.id %>">    
+  <div class="post col-md-12" id="<%= location.id %>">    
     <div class="left-box col-md-3 fl-l">
       <div class="cuisine"> Type: <%= location.location_type %>.</div>
       <div class='city'>City: <%= location.city %>, <%= location.state %> </div>
@@ -55,8 +75,11 @@
   </div>
 </div>
 
-<div>
+<!-- <div>
   <h3>
   <a class="back-to-top" href="#back-to-top"> Back to Top </a>
   </h3>
+</div> -->
+</div>
+  </div>
 </div>
