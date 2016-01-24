@@ -1,0 +1,66 @@
+<h1> Details about this Restaurant:</h1>
+
+<div class="view-post col-md-12">
+
+	<div class="post col-md-11">
+		<div class="title">
+	      	<%= @restaurant.name %>
+	      </a>
+		</div>
+		<div class="cuisine">
+			Cuisine: <%= @restaurant.cuisine %> (admittedly, Faker has weird tastes...)
+		</div>
+		<div class="address">
+			Address: <%= @restaurant.address %>
+			<%= @restaurant.city %>, <%= @restaurant.state %> <%= @restaurant.zip %>
+		</div>
+		<h2>Reviews for this restaurant:</h2>
+		<div class="comments-container">	
+			
+			<% unless @reviews.nil? %>
+			
+				<% @reviews.each do |review| %>
+
+				<div class="review col-md-2">
+					<%= review.rating %> stars
+				</div>
+				<div class="review-author col-md-8">
+				<%= review.body %>
+				</div>
+				<hr>
+
+				<% end %>
+
+			<% end %>
+
+			<% if current_user  && @current_user_reviews.length > 0 %>
+
+			You have submitted <%= @current_user_reviews.length %> review already.
+
+			<% elsif current_user %>
+
+			<h3>Submit your own review</h3>
+			<form id="post_review" method="POST" action="/<%=@restaurant.id %>/reviews">
+			  <div> 
+			  	Rating: <select name="rating" placeholder="5">
+			  			<option value="1"> 1 </option>
+			  			<option value="2"> 2 </option>
+			  			<option value="3"> 3 </option>
+			  			<option value="4"> 4 </option>
+			  			<option value="5"> 5 </option>
+  					</select> stars
+				</div>
+				<div>
+			  		Body: <input type="text" name="body" placeholder="Insert your review                            ">
+		  		</div>
+			  <input type="submit" value="Submit Your review">
+			</form>
+			<% else %>
+			<a href="/login" class="button"> Log in to Review </a>
+			<% end %>
+			</div>
+		</div>
+		<div class="cl-b"> </div>
+	</div>
+
+</div>
