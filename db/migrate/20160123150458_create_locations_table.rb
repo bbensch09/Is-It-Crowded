@@ -7,7 +7,7 @@ class CreateLocationsTable < ActiveRecord::Migration
       t.string :state, null: false
       t.integer :zip, null: false
       t.string :phone
-      t.string :type
+      t.string :location_type
       t.integer :location_creator_id
       t.decimal :lat, precision: 10, scale: 6
       t.decimal :lng, precision: 10, scale: 6
