@@ -22,14 +22,20 @@
       //it will loop over each business listed return
       //results that match a location that the user inputted
       function getLocations(data) {
-        //$("#results").html(data[0].dba_name);
-        //console.log(data[0].dba_name);
-        //console.log(data);
+        //set user inputted location to a variable
+        var userLocation = $('#a_location').val();
+
+        //generate list all of the names of the businesses from the API
         var str = "";
         str = str + "<ul>";
+        //loop over each business name and use a RegExp to check to see if it matches the user input
+        //if it matches at all, display it to the user
         for (var i = 0; i < data.length; i++) {
-           str = str + "<li>" + data[i].dba_name + "</li>";
-           //console.log(str);
+          var check = new RegExp(userLocation, "i");
+          if (data[i].dba_name.match(check)) {
+           str = str + "<li>" + data[i].dba_name + "<br>" + data[i].location_address + "<br>" + data[i].location_city + "<br>" + data[i].location_state + "<br>" + data[i].location_zip + "</li>";
+            //console.log(str);
+          }
         }
         str = str + "</ul>";
         $("#results").html(str);
