@@ -18,28 +18,50 @@
         request.done(successCallBack);
       }
 
+      function returnLocation() {
+        $("#confirmedLocation").html($("#userSelectedLocation").val());
+      }
+
       //getLocations gets the data return from our getRequest
       //it will loop over each business listed return
       //results that match a location that the user inputted
-      function getLocations(data) {
+      function getLocations(data, returnLocation) {
         //set user inputted location to a variable
         var userLocation = $('#a_location').val();
 
         //generate list all of the names of the businesses from the API
         var str = "";
-        str = str + "<ul>";
+        str = str + '<select id="userSelectedLocation">';
         //loop over each business name and use a RegExp to check to see if it matches the user input
         //if it matches at all, display it to the user
         for (var i = 0; i < data.length; i++) {
           var check = new RegExp(userLocation, "i");
           if (data[i].dba_name.match(check)) {
-           str = str + "<li>" + data[i].dba_name + "<br>" + data[i].location_address + "<br>" + data[i].location_city + "<br>" + data[i].location_state + "<br>" + data[i].location_zip + "</li>";
+           str = str + '<option value="data[i].dba_name">' + data[i].dba_name + " " + data[i].location_address + " " + data[i].location_city + " " + data[i].location_state + " " + data[i].location_zip + "</option>";
             //console.log(str);
           }
         }
-        str = str + "</ul>";
+        str = str + "</select>";
         $("#results").html(str);
+
       }
+
+      var optionsListener = function(data){
+          console.log("Things happned maybe");
+          console.log("This is data", data);
+        $('body').on("change", '#userSelectedLocation', function(e){
+          var optionSet = e.currentTarget;
+          for (var i = 0; i < optionSet.length; i++) {
+            if (optionSet[i].selected) {
+              console.log("this is what they selected", optionSet[i]);
+              //return {"dba_name": data[i].dba_name};
+            }
+          }
+          console.log("Things happned");
+          console.log(e);
+          //debugger;
+        })
+      };
 
       //when a user enters a location and hits the submit button
       //we make a getRequest and return a list of businesses with their
@@ -49,6 +71,11 @@
         getRequest(url, getLocations);
 
         });
+
+      /*$(document).on(function()
+            $("#confirmedLocation").html($("#userSelectedLocation").val());
+        );*/
+    optionsListener();
     });
   </script>
 </head>
@@ -61,5 +88,6 @@
   </form>
   <p>Locations</p>
   <div id="results"></div>
+  <div id="confirmedLocation"></div>
 </body>
 </html>
