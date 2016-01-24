@@ -3,6 +3,11 @@ get '/' do
   	erb :index
 end
 
+get '/app' do
+	@locations = Location.all	
+  	erb :index
+end
+
 # SHOW A SPECIFIC RESTAURANT
 # get '/:id' do
 #   @restaurant = Restaurant.find(params[:id])
