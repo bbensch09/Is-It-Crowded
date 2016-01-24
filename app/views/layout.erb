@@ -53,5 +53,86 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"> </script>
   <script src="/js/application.js"></script>
   <script src="/js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      //console.log("jquery is ready");
+
+      //create a function that will handle requests to SF Open Data API
+      //it takes a url parameter to the API and a successCallBack parameter
+      //which will be ran upon successful connection to the server
+      //it will return a json file of the datat
+      function getRequest(requestUrl, successCallBack){
+        var request = $.ajax({
+          url: requestUrl,
+          //data: {"dba_name": $('#a_location').val()},
+          method: "GET"
+        })
+        request.done(successCallBack);
+      }
+
+      function returnLocation() {
+        $("#confirmedLocation").html($("#userSelectedLocation").val());
+      }
+
+      //getLocations gets the data return from our getRequest
+      //it will loop over each business listed return
+      //results that match a location that the user inputted
+      function getLocations(data, returnLocation) {
+        //set user inputted location to a variable
+        var userLocation = $('#a_location').val();
+
+        //generate list all of the names of the businesses from the API
+        var str = "";
+        str = str + '<select id="userSelectedLocation">';
+        //loop over each business name and use a RegExp to check to see if it matches the user input
+        //if it matches at all, display it to the user
+        for (var i = 0; i < data.length; i++) {
+          var check = new RegExp(userLocation, "i");
+          if (data[i].dba_name.match(check)) {
+           str = str + '<option value="data[i].dba_name">' + data[i].dba_name + " " + data[i].location_address + " " + data[i].location_city + " " + data[i].location_state + " " + data[i].location_zip + "</option>";
+            //console.log(str);
+          }
+        }
+        str = str + "</select>";
+        $("#results").html(str);
+
+      }
+
+      var optionsListener = function(data){
+          console.log("Things happned maybe");
+          console.log("This is data", data);
+        $('body').on("change", '#userSelectedLocation', function(e){
+          var optionSet = e.currentTarget;
+          for (var i = 0; i < optionSet.length; i++) {
+            if (optionSet[i].selected) {
+              console.log("this is what they selected", optionSet[i]);
+              //return {"dba_name": data[i].dba_name};
+            }
+          }
+          console.log("Things happned");
+          console.log(e);
+          //debugger;
+        })
+      };
+
+      //when a user enters a location and hits the submit button
+      //we make a getRequest and return a list of businesses with their
+      //locations  for user to choose from
+      $('#submit_location').on('click', function(event) {
+        var url = "https://data.sfgov.org/resource/vbiu-2p9h.json";
+        getRequest(url, getLocations);
+
+        });
+
+      /*$(document).on(function()
+            $("#confirmedLocation").html($("#userSelectedLocation").val());
+        );*/
+    optionsListener();
+    });
+  </script>
+
+  
 </body>
 </html>

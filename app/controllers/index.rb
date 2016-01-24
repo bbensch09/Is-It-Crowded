@@ -8,6 +8,10 @@ get '/app' do
   	erb :index
 end
 
+get '/api' do
+	erb :api_demo
+end
+
 # SHOW A SPECIFIC RESTAURANT
 # get '/:id' do
 #   @restaurant = Restaurant.find(params[:id])
