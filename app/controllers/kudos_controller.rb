@@ -8,7 +8,7 @@
 #                         PUT    /quotes/:id(.:format)              quotes#update
 #                         DELETE /quotes/:id(.:format)              quotes#destroy
 
-post 'kudos/new' do
+post '/kudos/new' do
   if session[:user_id] == nil
     @error = "You must first be logged to create a kudo."
     erb :login
@@ -17,6 +17,6 @@ post 'kudos/new' do
     puts "current user is #{@user}"
     @post = Post.find(params[:id])
     @new_kudo = Kudo.create!(kudo_creator_id: @user.id, value: 1, post_id: @post.id)
-    erb :kudos
+    erb :show_post
   end
 end
