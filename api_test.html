@@ -1,93 +1,98 @@
 <html>
-<head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script>
-    $(document).ready(function(){
-      //console.log("jquery is ready");
-
-      //create a function that will handle requests to SF Open Data API
-      //it takes a url parameter to the API and a successCallBack parameter
-      //which will be ran upon successful connection to the server
-      //it will return a json file of the datat
-      function getRequest(requestUrl, successCallBack){
-        var request = $.ajax({
-          url: requestUrl,
-          //data: {"dba_name": $('#a_location').val()},
-          method: "GET"
-        })
-        request.done(successCallBack);
-      }
-
-      function returnLocation() {
-        $("#confirmedLocation").html($("#userSelectedLocation").val());
-      }
-
-      //getLocations gets the data return from our getRequest
-      //it will loop over each business listed return
-      //results that match a location that the user inputted
-      function getLocations(data, returnLocation) {
-        //set user inputted location to a variable
-        var userLocation = $('#a_location').val();
-
-        //generate list all of the names of the businesses from the API
-        var str = "";
-        str = str + '<select id="userSelectedLocation">';
-        //loop over each business name and use a RegExp to check to see if it matches the user input
-        //if it matches at all, display it to the user
-        for (var i = 0; i < data.length; i++) {
-          var check = new RegExp(userLocation, "i");
-          if (data[i].dba_name.match(check)) {
-           str = str + '<option value="data[i].dba_name">' + data[i].dba_name + " " + data[i].location_address + " " + data[i].location_city + " " + data[i].location_state + " " + data[i].location_zip + "</option>";
-            //console.log(str);
-          }
-        }
-        str = str + "</select>";
-        $("#results").html(str);
-
-      }
-
-      var optionsListener = function(data){
-          console.log("Things happned maybe");
-          console.log("This is data", data);
-        $('body').on("change", '#userSelectedLocation', function(e){
-          var optionSet = e.currentTarget;
-          for (var i = 0; i < optionSet.length; i++) {
-            if (optionSet[i].selected) {
-              console.log("this is what they selected", optionSet[i]);
-              //return {"dba_name": data[i].dba_name};
-            }
-          }
-          console.log("Things happned");
-          console.log(e);
-          //debugger;
-        })
-      };
-
-      //when a user enters a location and hits the submit button
-      //we make a getRequest and return a list of businesses with their
-      //locations  for user to choose from
-      $('#submit_location').on('click', function(event) {
-        var url = "https://data.sfgov.org/resource/vbiu-2p9h.json";
-        getRequest(url, getLocations);
-
-        });
-
-      /*$(document).on(function()
-            $("#confirmedLocation").html($("#userSelectedLocation").val());
-        );*/
-    optionsListener();
-    });
-  </script>
-</head>
-<body>
-  <h1>Places In San Francisco</h1>
-  <h3>Enter a Location</h3>
-  <form method="get">
-    <input type="text" id="a_location">
-    <input type="button" id="submit_location" value="">
+ <head>
+  <title>Is It Crowded? Yelp API Example</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+  <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+  <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>      
+ </head>
+ <body>
+	<h1>Places In San Francisco</h1>
+	<h3>Enter a Location</h3>
+	<form>
+		<input type="text" id="a_location">
+    <input type="button" id="submit_location" value="See Locations"  onclick="getLocations()">
   </form>
   <p>Locations</p>
   <div id="results"></div>
   <div id="confirmedLocation"></div>
-</body>
+  <script type="text/javascript">
+		function getLocations(){
+		
+			// // // // HERE WE SET UP ALL AUTHORIZATION TO ACCESS YELP'S API // // // //
+			var auth = {
+      // Update with your auth tokens.
+				consumerKey : "XB9Ewkv94Fl9mgZEgNCNhA",
+				consumerSecret : "uNU1qPOU656pbHrEWKQnlKw9vTI",
+				accessToken : "gHVuD1m1KeE02VTsHruEnvg2jtVMoMxE",
+				accessTokenSecret : "gczhERkRTCmHaoiIV5Wnu5nT-Cw",
+				serviceProvider : {
+					signatureMethod : "HMAC-SHA1"
+				}
+			};
+		 
+			var terms = document.getElementById('a_location').value;
+			console.log('this is terms ', terms);
+      var near = 'San+Francisco';
+      var accessor = {
+        consumerSecret : auth.consumerSecret,
+        tokenSecret : auth.accessTokenSecret
+      };
+       
+			parameters = [];
+      parameters.push(['term', terms]);
+      parameters.push(['location', near]);
+			parameters.push(['callback', 'cb']);
+      parameters.push(['oauth_consumer_key', auth.consumerKey]);
+      parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
+      parameters.push(['oauth_token', auth.accessToken]);
+      parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
+
+      var message = {
+        'action' : 'http://api.yelp.com/v2/search',
+        'method' : 'GET',
+        'parameters' : parameters
+      };
+
+      OAuth.setTimestampAndNonce(message);
+      OAuth.SignatureMethod.sign(message, accessor);
+
+      var parameterMap = OAuth.getParameterMap(message.parameters);
+      console.log(parameterMap);
+			// // // // END OF SET UP ALL AUTHORIZATION TO ACCESS YELP'S API // // // //
+
+			// // // // HERE WE ACTUALLY MAKE REQUEST TO YELP'S API WITH PROPER AUTHORIZATION 
+			// // // // AND WITH THE DATA WE RECEIVE WE PUT IT IN HTML
+			        var str = "";
+        str = str + '<select id="userSelectedLocation">';
+      $.ajax({
+        'url' : message.action,
+        'data' : parameterMap,
+        'dataType' : 'jsonp',
+        'jsonpCallback' : 'cb',
+        'success' : function(data, textStats, XMLHttpRequest) {
+					for (var i = 0; i < 10; i++) {
+						//loop over each returned result from yelp but only the first 10 results
+            //console.log(data);
+						//console.log("this is name: ", data.businesses[0].name);
+						//console.log("this is type: ", data.businesses[0].categories[0][0]);
+						//console.log("this is latitude: ", data.region.center.latitude);
+						//console.log("this is longitude: ", data.region.center.longitude);
+						//console.log("this is latitude: ", data.region.latitude_delta);
+						// $("body").append(data.businesses[i].name + "<br>");
+					
+					
+						//generate list all of the names of the businesses from the API, then allow user to select business
+           str = str + '<option value="' + data.businesses[i].name + '">' + data.businesses[i].name + "</option>";
+            //console.log(str);
+					}
+					str = str + "</select>";
+					$("#results").html(str);
+				}
+			});
+		}
+	
+			// // // // END OF SENDING REQUESTS TO YELPS API // // // //
+
+   </script>
+	</body>
 </html>
